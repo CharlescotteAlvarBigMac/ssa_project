@@ -1,29 +1,8 @@
+{% extends 'chipin/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>ChipIn Homepage</title>
-    <link rel="stylesheet" href="{% static 'chipin/styles.css' %}">
-</head>
-<body>
-    <div class="header">
-        <div class="logo">
-            <img src="{% static 'chipin/logo_90.jpg' %}" alt="Logo">
-        </div>
-        <div class="user-info">
-            <span>{{ request.user.username }}</span>
-            <form action="{% url 'users:logout' %}" method="post" style="margin: 0; margin-left: 20px;">
-                {% csrf_token %}
-                <button type="submit">Log out</button>
-            </form>
-        </div>
-    </div>   
-    {% if messages %}
-        <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-</body>
-</html>
+{% block title %}ChipIn{% endblock %}
+
+{% block content %}
+<h1>ChipIn</h1>
+<p>This page is for ChipIn group functions.</p>
+{% endblock %}
