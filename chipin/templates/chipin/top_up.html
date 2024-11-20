@@ -1,0 +1,12 @@
+{% extends 'chipin/base.html' %}
+
+{% block content %}
+    <h2>{{ welcome_message }}</h2>
+    <p>Your current balance is: ${{ user_balance }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }} 
+        <button type="submit">Top Up</button>
+    </form>
+{% endblock %}

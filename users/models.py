@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django import forms
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -38,3 +39,25 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+class TopUpForm(forms.Form):
+    min_value = forms.DecimalField(min_value=0.01)
+    decimal_places = forms.DecimalField(decimal_places=2)
+    max_digits = forms.DecimalField(max_digits=5)
+    label = "Amount to Top-Up"
+    error_messages = {
+        'min_value': "Please enter an amount greater than $0.00.",
+        'invalid': "Enter a valid amount in dollars and cents.",
+    }
+
+class TopUpForm(forms.Form):
+    amount = forms.DecimalField(
+        min_value=0.01,  # Minimum value
+        decimal_places=2,  # Decimal places
+        max_digits=5,  # Max digits
+        label="Amount to Top-Up",
+        error_messages={
+            'min_value': "Please enter an amount greater than $0.00.",
+            'invalid': "Enter a valid amount in dollars and cents.",
+        }
+    )
