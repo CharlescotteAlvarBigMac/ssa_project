@@ -29,6 +29,8 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
     nickname = models.CharField(max_length=30, unique=True, null=False, blank=False)
+    max_spend = models.DecimalField(max_digits=10, decimal_places=2, default=100.00)  # Max spend for each event
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=100.00)  # User's current balance
 
     def clean(self):
         validate_unique_nickname(self.nickname, instance=self)
@@ -38,8 +40,8 @@ class Profile(models.Model):
         super().save(*args, **kwargs)    
 
     def __str__(self):
-        return self.user.username
-    
+        return f"{self.user.username}'s Profile"
+
 class TopUpForm(forms.Form):
     min_value = forms.DecimalField(min_value=0.01)
     decimal_places = forms.DecimalField(decimal_places=2)
@@ -50,14 +52,10 @@ class TopUpForm(forms.Form):
         'invalid': "Enter a valid amount in dollars and cents.",
     }
 
-class TopUpForm(forms.Form):
-    amount = forms.DecimalField(
-        min_value=0.01,  # Minimum value
-        decimal_places=2,  # Decimal places
-        max_digits=5,  # Max digits
-        label="Amount to Top-Up",
-        error_messages={
-            'min_value': "Please enter an amount greater than $0.00.",
-            'invalid': "Enter a valid amount in dollars and cents.",
-        }
-    )
+class Transaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user.username} - ${self.amount} on {self.created_at}"
