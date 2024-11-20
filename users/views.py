@@ -68,26 +68,21 @@ def top_up(request):
         if form.is_valid():
             amount = form.cleaned_data['amount']
 
-            # Update the user's balance
-            profile = request.user.profile  # Use the logged-in user's profile
+            profile = request.user.profile 
             profile.balance += amount
             profile.save()
 
-            # Create a transaction record
             Transaction.objects.create(user=request.user, amount=amount)
 
-            # Show a success message
             messages.success(request, f"Your balance has been topped up by ${amount}.")
-            return redirect('users:user')  # Redirect to user profile or dashboard
+            return redirect('users:user') 
     else:
         form = TopUpForm()
 
-    # Define the context to pass to the templatep
     context = {
         'form': form,
         'user_balance': request.user.profile.balance,
         'welcome_message': f"Welcome back, {request.user.first_name}!",
     }
 
-    # Render the template with the context
     return render(request, 'chipin/top_up.html', context)
